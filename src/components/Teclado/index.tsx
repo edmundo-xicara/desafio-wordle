@@ -1,6 +1,5 @@
 import style from './Teclado.module.scss';
 import deleteImg from '../../assets/img/delete.png';
-import { PassThrough } from 'stream';
 
 
 export default function Teclado() {
@@ -12,25 +11,23 @@ export default function Teclado() {
         ['ENTER', 'Z', 'X', 'C', 'V', 'B', 'N', 'M', imgApagar]
     ];
 
-    let linha:number, coluna: number, palavra: string;
+    let linha:number, coluna: number;
     linha = coluna = 0;
-    palavra = '';
     const escreveLetra = (evento: React.MouseEvent<HTMLButtonElement>) => {   
         let campoLetra = document.getElementById(`campo-letra${linha}-${coluna}`); 
         let letra = (evento.target as any).innerHTML;
 
-        if(letra.length == 1) {
+        if(letra.length === 1) {
 
-            if(campoLetra != null) {
-                campoLetra.innerHTML = letra;
-                palavra += letra;
-            }
+            if(campoLetra) campoLetra.innerHTML = letra;
 
             if(coluna < 5) coluna++;
 
-        } else if(letra == 'ENTER') {
+        } else if(letra === 'ENTER') {
 
-            if(coluna == 5) {
+            if(coluna === 5) {
+                verificaPalavra(linha);
+
                 coluna = 0;
                 linha++;
             }
@@ -40,12 +37,10 @@ export default function Teclado() {
             if(coluna > 0) coluna--; 
             campoLetra = document.getElementById(`campo-letra${linha}-${coluna}`);
 
-            if(campoLetra != null) {
-                campoLetra.innerHTML = '';
-                palavra = palavra.slice(0, -1);
-            }
+            if(campoLetra) campoLetra.innerHTML = '';
 
         }
+
     };
 
     return (
@@ -55,7 +50,7 @@ export default function Teclado() {
                 <div className={style.linha} id={style['linha'+i]} key={'linha'+i}>
 
                     {teclas[i].map((tecla: string | JSX.Element, j: number) => (
-                        <button className={style.tecla} key={`tecla${i}-${j}`} onClick={evento => escreveLetra(evento)}> 
+                        <button className={style.tecla} key={`tecla${i}-${j}`} onClick={evento => escreveLetra(evento)} id={typeof tecla === 'string' ? tecla : 'DELETE'}> 
                             {tecla} 
                         </button>
                     ))}
@@ -65,4 +60,44 @@ export default function Teclado() {
 
         </section>
     )
+}
+
+
+function verificaPalavra(linha: number) {
+    let palavraSecreta = 'APPLE';
+    let letrasAcertadas = 0;
+
+    for(let i = 0; i < 5; i++) {
+        let campoLetra = document.getElementById(`campo-letra${linha}-${i}`);
+
+        if(campoLetra) {
+            let letra = campoLetra.innerHTML;
+            let tecla = document.getElementById(letra);
+
+            if(letra === palavraSecreta[i]) {
+
+                campoLetra.classList.add('acertou');
+                if(tecla) tecla.classList.add('acertou');
+
+                palavraSecreta = palavraSecreta.replace(letra, ' ');
+
+                letrasAcertadas++;
+
+            } else if(palavraSecreta.indexOf(letra) !== -1) {
+
+                campoLetra.classList.add('tem-na-palavra');
+                if(tecla && !tecla.classList.contains('acertou')) tecla.classList.add('tem-na-palavra');
+
+                palavraSecreta = palavraSecreta.replace(letra, ' ');
+
+            } else {
+
+                if(tecla) {
+                    (tecla as HTMLButtonElement).disabled = true;
+                    tecla.classList.add('desabilitado');
+                }
+
+            }
+        }
+    }
 }

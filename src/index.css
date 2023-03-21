@@ -18,3 +18,15 @@ body{
     list-style-type: none;
 	background-color: #14161C;
 }
+
+.desabilitado {
+    background-color: #585858 !important;
+}
+
+.tem-na-palavra {
+    background-color: #B59F3B !important;
+}
+
+.acertou {
+    background-color: #538D4E !important;
+}
