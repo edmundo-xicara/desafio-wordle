@@ -1,0 +1,26 @@
+$distancia-quadrados: 5px;
+$tamanho-quadrado: 17vw;
+$tamanho-maximo-quadrado: 70px;
+
+.palavra {
+    display: flex;
+    justify-content: center;
+    gap: $distancia-quadrados;
+    width: 100vw;
+    padding: $distancia-quadrados/2 0;
+
+    .letra {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        max-width: $tamanho-maximo-quadrado;
+        max-height: $tamanho-maximo-quadrado;
+        width: $tamanho-quadrado;
+        height: $tamanho-quadrado;
+        border: 2px solid rgba(128, 128, 128, 0.5);
+        font-family: var(--fonte-principal);
+        font-weight: 700;
+        font-size: 2rem;
+        color: white;
+    }
+}
