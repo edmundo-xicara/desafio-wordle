@@ -50,7 +50,7 @@ export default function Teclado({palavraSecreta}: {palavraSecreta: string}) {
                 <div className={style.linha} id={style['linha'+i]} key={'linha'+i}>
 
                     {teclas[i].map((tecla: string | JSX.Element, j: number) => (
-                        <button className={style.tecla} key={`tecla${i}-${j}`} onClick={evento => escreveLetra(evento)} id={typeof tecla === 'string' ? tecla : 'DELETE'}> 
+                        <button className={`${style.tecla} ${style[typeof tecla === 'string' ? tecla : 'DELETE']}`} key={`tecla${i}-${j}`} onClick={evento => escreveLetra(evento)} id={typeof tecla === 'string' ? tecla : 'DELETE'}> 
                             {tecla} 
                         </button>
                     ))}
@@ -68,11 +68,11 @@ function verificaPalavra(linha: number, palavraSecreta: string) {
 
     for(let i = 0; i < 5; i++) {
         let campoLetra = document.getElementById(`campo-letra${linha}-${i}`);
-        console.log(palavraSecreta)
 
         if(campoLetra) {
             let letra = campoLetra.innerHTML;
             let tecla = document.getElementById(letra);
+            console.log(tecla)
 
             if(letra === palavraSecreta[i]) {
 

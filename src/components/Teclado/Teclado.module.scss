@@ -19,8 +19,11 @@ $tamanho-maximo-teclas: 50px;
         .tecla {
             display: flex;
             align-items: center;
-            justify-content: center;          
+            justify-content: center;
+            min-width: fit-content;
+            width: 8vw;          
             height: 50px;
+            padding: 1%;
             background-color: #818384;
             border: none;
             border-radius: 2px;
@@ -28,12 +31,23 @@ $tamanho-maximo-teclas: 50px;
             font-family: var(--fonte-principal);
             font-weight: 700;
             font-size: 1.25rem;
-            flex-grow: 1;
             cursor: pointer;
+        }
+
+        .ENTER, .DELETE {
+            max-width: none;
+            font-size: 0.75rem;
+            width: 12vw;
         }
     }
 
     #linha1 {
-        width: 90%;
+        width: 88%;
+    }
+}
+
+@media screen and (min-width: 768px) {
+    .teclado .linha .ENTER {
+        font-size: 1.25rem;
     }
 }
