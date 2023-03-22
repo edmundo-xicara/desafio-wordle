@@ -64,11 +64,11 @@ export default function Teclado({palavraSecreta}: {palavraSecreta: string}) {
 
 
 function verificaPalavra(linha: number, palavraSecreta: string) {
-    let resetPalavraSecreta = palavraSecreta;
     let letrasAcertadas = 0;
 
     for(let i = 0; i < 5; i++) {
         let campoLetra = document.getElementById(`campo-letra${linha}-${i}`);
+        console.log(palavraSecreta)
 
         if(campoLetra) {
             let letra = campoLetra.innerHTML;
@@ -92,14 +92,12 @@ function verificaPalavra(linha: number, palavraSecreta: string) {
 
             } else {
 
-                if(tecla) {
+                if(tecla && !tecla.classList.contains('tem-na-palavra') && !tecla.classList.contains('acertou')) {
                     (tecla as HTMLButtonElement).disabled = true;
                     tecla.classList.add('desabilitado');
                 }
 
             }
-
-            palavraSecreta = resetPalavraSecreta;
         }
     }
 }
