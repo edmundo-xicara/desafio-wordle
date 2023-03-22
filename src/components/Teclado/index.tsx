@@ -2,7 +2,7 @@ import style from './Teclado.module.scss';
 import deleteImg from '../../assets/img/delete.png';
 
 
-export default function Teclado() {
+export default function Teclado({palavraSecreta}: {palavraSecreta: string}) {
     const imgApagar = <img src={deleteImg} width='25px' alt='Apagar'></img>;
 
     const teclas = [
@@ -26,7 +26,7 @@ export default function Teclado() {
         } else if(letra === 'ENTER') {
 
             if(coluna === 5) {
-                verificaPalavra(linha);
+                verificaPalavra(linha, palavraSecreta);
 
                 coluna = 0;
                 linha++;
@@ -63,8 +63,8 @@ export default function Teclado() {
 }
 
 
-function verificaPalavra(linha: number) {
-    let palavraSecreta = 'APPLE';
+function verificaPalavra(linha: number, palavraSecreta: string) {
+    let resetPalavraSecreta = palavraSecreta;
     let letrasAcertadas = 0;
 
     for(let i = 0; i < 5; i++) {
@@ -98,6 +98,8 @@ function verificaPalavra(linha: number) {
                 }
 
             }
+
+            palavraSecreta = resetPalavraSecreta;
         }
     }
 }
