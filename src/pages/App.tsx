@@ -1,17 +1,23 @@
+import { useState } from 'react';
+import Alerta from '../components/Alerta';
 import Palavra from '../components/Palavra';
 import Teclado from '../components/Teclado';
 import listaPalavras from '../local-json/lista-palavras.json';
 import style from './App.module.scss';
 
 export default function App() {  
+  const [alerta, setAlerta] = useState({'tipo': 'escondido', 'texto': ''});
+
   return (
     <div className={style.app}>
+
+      <Alerta alerta={alerta} />
 
       <section className='palavras'>
         {Array(6).fill(true).map((_, i) => <Palavra key={'palavra'+i} linha={i} />)}
       </section>
 
-      <Teclado palavraSecreta={sorteiaPalavra()} />
+      <Teclado palavraSecreta={sorteiaPalavra()} setAlerta={setAlerta} />
 
     </div>
   );

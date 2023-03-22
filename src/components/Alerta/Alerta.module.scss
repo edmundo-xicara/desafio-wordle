@@ -1,0 +1,22 @@
+@mixin estilo-alert {
+    font-family: var(--fonte-principal);
+    font-weight: 700;
+    padding: 10px 16px;
+    border-radius: 10px;
+}
+
+.escondido {
+    visibility: hidden;
+}
+
+.erro {
+    @include estilo-alert();
+    color: #5F0F1D;
+    background-color: #BA4747;
+}
+
+.sucesso {
+    @include estilo-alert();
+    color: #2B5028;
+    background-color: #538D4E;
+}
