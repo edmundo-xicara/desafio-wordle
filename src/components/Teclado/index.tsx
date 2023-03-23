@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { IPosicao } from '../../types/posicao';
 import { IAlerta } from '../../types/alerta';
-import listaPalavras from '../../local-json/lista-palavras.json';
+import listaPalavras from '../../local-json/lista-palavras-sem-acento.json';
 import style from './Teclado.module.scss';
 import deleteImg from '../../assets/img/delete.png';
 
@@ -84,28 +84,48 @@ function escreveLetra(evento: React.MouseEvent<HTMLButtonElement>, posicao: IPos
 function verificaPalavra(linha: number, palavraSecreta: string) {
     let letrasAcertadas = 0;
 
+    const removeAcento = (str: string) => {
+        const mapaAcentos = {
+            'Á': 'A',
+            'À': 'A',
+            'Ã': 'A',
+            'Â': 'A',
+            'É': 'E',
+            'Ê': 'E',
+            'Í': 'I',
+            'Ó': 'O',
+            'Ô': 'O',
+            'Õ': 'O',
+            'Ú': 'U',
+          };
+        
+        return str.split('').map(str => (mapaAcentos as any)[str] || str).join('');
+    }
+
     for(let i = 0; i < 5; i++) {
         let campoLetra = document.getElementById(`campo-letra${linha}-${i}`);
 
         if(campoLetra) {
             let letra = campoLetra.innerHTML;
+            let letraSecreta = palavraSecreta[i];
             let tecla = document.getElementById(letra);
 
-            if(letra === palavraSecreta[i]) {
+            if(letra === removeAcento(letraSecreta)) {
 
                 campoLetra.classList.add('acertou');
+                campoLetra.innerHTML = letraSecreta;
                 if(tecla) tecla.classList.add('acertou');
 
-                palavraSecreta = palavraSecreta.replace(letra, ' ');
+                palavraSecreta = palavraSecreta.replace(letraSecreta, ' ');
 
                 letrasAcertadas++;
 
-            } else if(palavraSecreta.indexOf(letra) !== -1) {
+            } else if(removeAcento(palavraSecreta).indexOf(letra) !== -1) {
 
                 campoLetra.classList.add('tem-na-palavra');
                 if(tecla && !tecla.classList.contains('acertou')) tecla.classList.add('tem-na-palavra');
 
-                palavraSecreta = palavraSecreta.replace(letra, ' ');
+                palavraSecreta = palavraSecreta.replace(letraSecreta, ' ');
 
             } else {
 
