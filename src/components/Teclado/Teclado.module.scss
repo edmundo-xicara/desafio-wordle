@@ -1,5 +1,4 @@
-$distancia-teclas: 5px;
-$tamanho-maximo-teclas: 50px;
+$distancia-teclas: 6px;
 
 .teclado {
     display: flex;
@@ -39,10 +38,6 @@ $tamanho-maximo-teclas: 50px;
             font-size: 0.75rem;
             width: 12vw;
         }
-    }
-
-    #linha1 {
-        width: 88%;
     }
 }
 
