@@ -5,6 +5,9 @@ import Teclado from '../components/Teclado';
 import listaPalavras from '../local-json/lista-palavras.json';
 import style from './App.module.scss';
 
+
+const palavraSecreta = sorteiaPalavra();
+
 export default function App() {  
   const [alerta, setAlerta] = useState({'tipo': 'escondido', 'texto': ''});
 
@@ -17,7 +20,7 @@ export default function App() {
         {Array(6).fill(true).map((_, i) => <Palavra key={'palavra'+i} linha={i} />)}
       </section>
 
-      <Teclado palavraSecreta={sorteiaPalavra()} setAlerta={setAlerta} />
+      <Teclado palavraSecreta={palavraSecreta} setAlerta={setAlerta} />
 
     </div>
   );
