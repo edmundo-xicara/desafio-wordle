@@ -8,6 +8,7 @@ $distancia-teclas: 6px;
     max-width: 700px;
     width: 100vw;
     padding: 0 2vw;
+    padding-bottom: 10px;
 
     .linha {
         display: flex;
@@ -29,13 +30,13 @@ $distancia-teclas: 6px;
             color: white;
             font-family: var(--fonte-principal);
             font-weight: 700;
-            font-size: 1.25rem;
+            font-size: 20px;
             cursor: pointer;
         }
 
         .ENTER, .DELETE {
             max-width: none;
-            font-size: 0.75rem;
+            font-size: 12px;
             width: 12vw;
         }
     }
@@ -43,6 +44,6 @@ $distancia-teclas: 6px;
 
 @media screen and (min-width: 768px) {
     .teclado .linha .ENTER {
-        font-size: 1.25rem;
+        font-size: 20px;
     }
 }

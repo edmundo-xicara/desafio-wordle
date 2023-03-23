@@ -1,0 +1,22 @@
+$tamanho-logo: 20px;
+
+.cabecalho {
+    width: 100vw;
+    padding: 1vh 5%;
+    border-bottom: 2px solid #585858;
+
+    .logo {
+        font-family: var(--fonte-principal);
+        font-size: 24px;
+        font-weight: 700;
+        background-color: #F9FF00;
+        padding: 0 3px;
+    }
+}
+
+
+@media screen and (min-height: 600px) {
+    .cabecalho .logo {
+        font-size: 32px;
+    }
+}

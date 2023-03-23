@@ -2,6 +2,14 @@
 
 :root {
     --fonte-principal: 'Inter', sans-serif;
+
+    --cor-de-fundo: #14161C;
+    --cor-acerto: #538D4E;
+    --cor-tem-na-palavra: #B59F3B;
+}
+
+html {
+    font-size: 8px;
 }
 
 *, 
@@ -16,7 +24,7 @@
 body{
     font-size: 100%;
     list-style-type: none;
-	background-color: #14161C;
+	background-color: var(--cor-de-fundo);
 }
 
 .desabilitado {
@@ -24,9 +32,16 @@ body{
 }
 
 .tem-na-palavra {
-    background-color: #B59F3B !important;
+    background-color: var(--cor-tem-na-palavra) !important;
 }
 
 .acertou {
-    background-color: #538D4E !important;
+    background-color: var(--cor-acerto) !important;
+}
+
+
+@media screen and (min-height: 600px) {
+    html {
+        font-size: 16px;
+    }
 }

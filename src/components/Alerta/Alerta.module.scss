@@ -1,22 +1,36 @@
 @mixin estilo-alert {
     font-family: var(--fonte-principal);
+    font-size: 16px;
     font-weight: 700;
     padding: 10px 16px;
     border-radius: 10px;
+    animation: fade-in-out 1s 2 alternate forwards;
 }
 
-.escondido {
-    visibility: hidden;
+.alerta-container {
+    height: 20px;
+    position: absolute;
+    top: 8%;
+
+
+    .escondido {
+        visibility: hidden;
+    }
+    
+    .erro {
+        @include estilo-alert();
+        color: #5F0F1D;
+        background-color: #BA4747;
+    }
+    
+    .sucesso {
+        @include estilo-alert();
+        color: #2B5028;
+        background-color: #538D4E;
+    }
 }
 
-.erro {
-    @include estilo-alert();
-    color: #5F0F1D;
-    background-color: #BA4747;
-}
-
-.sucesso {
-    @include estilo-alert();
-    color: #2B5028;
-    background-color: #538D4E;
+@keyframes fade-in-out {
+    from {opacity: 0;}
+    to {opacity: 1;}
 }

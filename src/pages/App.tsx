@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import Cabecalho from '../components/Cabecalho';
 import Alerta from '../components/Alerta';
 import Palavra from '../components/Palavra';
 import Teclado from '../components/Teclado';
@@ -14,9 +15,11 @@ export default function App() {
   return (
     <div className={style.app}>
 
+      <Cabecalho />
+
       <Alerta alerta={alerta} />
 
-      <section className='palavras'>
+      <section className={style.palavras}>
         {Array(6).fill(true).map((_, i) => <Palavra key={'palavra'+i} linha={i} />)}
       </section>
 
