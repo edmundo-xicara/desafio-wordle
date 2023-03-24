@@ -63,11 +63,10 @@ function escreveLetra(evento: React.MouseEvent<HTMLButtonElement>, posicao: IPos
                 verificaPalavra(posicao.linha, palavraSecreta);
                 setPosicao({linha: posicao.linha+1, coluna: 0})
                 palavraDigitada = '';
-                setAlerta({'tipo': 'escondido', 'texto': ''});
                 
             } else setAlerta({'tipo': 'erro', 'texto': 'Palavra não está na lista'});
         
-        } else setAlerta({'tipo': 'erro', 'texto': 'Preencha todas as letras'}); 
+        } else setAlerta({'tipo': 'erro', 'texto': 'Preencha todas as letras'});
 
     } else {
 
