@@ -40,6 +40,10 @@ $distancia-teclas: 6px;
             width: 12vw;
         }
     }
+
+    #linha1 {
+        max-width: 90%;
+    }
 }
 
 @media screen and (min-width: 768px) {
