@@ -23,7 +23,7 @@ export default function App() {
         {Array(6).fill(true).map((_, i) => <Palavra key={'palavra'+i} linha={i} />)}
       </section>
 
-      <Teclado palavraSecreta={palavraSecreta} setAlerta={setAlerta} />
+      <Teclado palavraSecreta={palavraSecreta} setAlerta={setAlerta} alerta={alerta} />
 
     </div>
   );

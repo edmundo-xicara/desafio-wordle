@@ -1,4 +1,5 @@
 import style from './Palavra.module.scss';
+import './alerta-palavra.scss';
 
 
 export default function Palavra({linha}: {linha: number}) {
