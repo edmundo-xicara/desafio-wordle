@@ -63,5 +63,6 @@ function criaStatePalavra(): Record<string, Record<string, Record<string, string
 
 function sorteiaPalavra() {
   const indiceSorteado =Math.floor(Math.random() * listaPalavras.length);
+  return 'NASAL'
   return listaPalavras[indiceSorteado];
 }

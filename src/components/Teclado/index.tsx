@@ -86,10 +86,7 @@ function escreveLetra(
                 acentuaPalavraDigitada(posicao.linha, indexPalavraDigitada, setPalavras);
                 verificaPalavra(posicao.linha, palavraSecreta, setPalavras);
 
-                if(posicao.linha+1 === 6) {
-                    terminaJogo(false, palavraSecreta);
-                    return;
-                }
+                if(posicao.linha+1 === 5) return
 
                 setPosicao({linha: posicao.linha+1, coluna: 0});
                 mostraCampoAtivo(posicao.linha+1, 0, setPalavras);
@@ -195,7 +192,7 @@ async function verificaPalavra(
         await new Promise((r) => setTimeout(r, 400));
 
 
-        setPalavras((estadoAnterior) => {
+        setPalavras(estadoAnterior => {
             let novoEstado = Object.assign({}, estadoAnterior);
             let campoLetra = novoEstado[`palavra${linha}`][`campoLetra${i}`];
             let letra = campoLetra.letra;
@@ -203,8 +200,8 @@ async function verificaPalavra(
             let letraSecreta = palavraSecreta[i];
             let tecla = document.getElementById(letra) as HTMLButtonElement;
     
-            if(letra === removeAcento(letraSecreta)) {
-    
+            if(letra === removeAcento(letraSecreta) && letraSecreta !== ' ') {
+
                 campoLetra.classe = 'verificado acertou';
                 campoLetra.letra = letraSecreta;
                 tecla.classList.add('acertou');
@@ -213,7 +210,7 @@ async function verificaPalavra(
     
                 letrasAcertadas++;
     
-            } else if(letraIndex !== -1) {
+            } else if(letraIndex !== -1 && letraSecreta !== ' ') {
 
                 if(!campoLetra.classe.includes('acertou')) campoLetra.classe = 'verificado tem-na-palavra';
                 if(!tecla.classList.contains('acertou')) tecla.classList.add('tem-na-palavra');
@@ -236,7 +233,10 @@ async function verificaPalavra(
         });
     }
 
+    await new Promise((r) => setTimeout(r, 400));
+
     if(letrasAcertadas === 5) terminaJogo(true, palavraSecreta);
+    else if(linha === 5) terminaJogo(false, palavraSecreta);
 }
 
 
@@ -253,8 +253,14 @@ async function alertaErro(texto: string, posicao: IPosicao) {
 
 
 function terminaJogo(acertou: boolean, palavraSecreta: string) {
-    const teclas = document.getElementById('teclado')?.children as HTMLCollectionOf<HTMLButtonElement>;
-    for(let i = 0; i < teclas.length; i++) teclas[i].setAttribute('disabled', 'true');
+    const teclas = document.querySelectorAll('#teclado button') as NodeListOf<HTMLButtonElement>;
+    teclas.forEach(tecla => tecla.disabled = true); 
+
+    const palavras = document.querySelectorAll('.palavra');
+    palavras.forEach(palavra => {
+        let letras = palavra.children;
+        for(let i = 0; i < letras.length; i++) letras[i].classList.remove('ativo');
+    })
 
     if(acertou) {
         toast.success('Parabéns, você acertou a palavra!', {
