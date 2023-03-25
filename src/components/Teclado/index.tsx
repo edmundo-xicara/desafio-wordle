@@ -4,11 +4,13 @@ import listaPalavrasSemAcento from '../../local-json/lista-palavras-sem-acento.j
 import style from './Teclado.module.scss';
 import { IPosicao } from '../../types/posicao';
 import { useState } from 'react';
-import { toast, Zoom } from 'react-toastify';
+import { toast } from 'react-toastify';
 
 
 
-export default function Teclado({palavraSecreta}: {palavraSecreta: string}) {
+export default function Teclado({palavraSecreta, setPalavras}: {
+    palavraSecreta: string, 
+    setPalavras: React.Dispatch<React.SetStateAction<Record<string, Record<string, Record<string, string>>>>>}) {
 
     const imgApagar = <img src={deleteImg} width='25px' alt='Apagar'></img>;
 
@@ -21,13 +23,17 @@ export default function Teclado({palavraSecreta}: {palavraSecreta: string}) {
     const [posicao, setPosicao] = useState({'linha': 0, 'coluna': 0});
 
     return (
-        <section className={style.teclado}>
+        <section className={style.teclado} id='teclado'>
 
             {Array(3).fill(true).map((_, i: number) => (
                 <div className={style.linha} id={style['linha'+i]} key={'linha'+i}>
 
                     {teclas[i].map((tecla: string | JSX.Element, j: number) => (
-                        <button className={`${style.tecla} ${style[typeof tecla === 'string' ? tecla : 'DELETE']}`} key={`tecla${i}-${j}`} onClick={evento => escreveLetra(evento, posicao, setPosicao, palavraSecreta)} id={typeof tecla === 'string' ? tecla : 'DELETE'}> 
+                        <button 
+                        className={style.tecla} 
+                        key={`tecla${i}-${j}`} 
+                        onClick={evento => escreveLetra(evento, posicao, setPosicao, setPalavras, palavraSecreta)} 
+                        id={typeof tecla === 'string' ? tecla : 'DELETE'}> 
                             {tecla} 
                         </button>
                     ))}
@@ -40,15 +46,29 @@ export default function Teclado({palavraSecreta}: {palavraSecreta: string}) {
 }
 
 
-function escreveLetra(evento: React.MouseEvent<HTMLButtonElement>, posicao: IPosicao, setPosicao: React.Dispatch<React.SetStateAction<IPosicao>>, palavraSecreta: string) {
-    let campoLetra = document.getElementById(`campo-letra${posicao.linha}-${posicao.coluna}`); 
-    let letra = (evento.target as any).innerHTML;
+function escreveLetra(
+    evento: React.MouseEvent<HTMLButtonElement>, 
+    posicao: IPosicao, 
+    setPosicao: React.Dispatch<React.SetStateAction<IPosicao>>, 
+    setPalavras: React.Dispatch<React.SetStateAction<Record<string, Record<string, Record<string, string>>>>>, 
+    palavraSecreta: string) {
+ 
+    let letra = (evento.target as Element).innerHTML;
 
     if(letra.length === 1) {
 
-        if(campoLetra) campoLetra.innerHTML = letra;
+        setPalavras((estadoAnterior) => {
+            let novoEstado = Object.assign({}, estadoAnterior);
+
+            if(posicao.coluna < 5) {
+                novoEstado[`palavra${posicao.linha}`][`campoLetra${posicao.coluna}`].letra = letra;
+            }
+            
+            return novoEstado;
+        });
+
         if(posicao.coluna < 5) setPosicao({...posicao, coluna: posicao.coluna+1});
-        mostraCampoAtivo(posicao.linha, posicao.coluna+1);
+        mostraCampoAtivo(posicao.linha, posicao.coluna+1, setPalavras);
 
     } else if(letra === 'ENTER') {
 
@@ -57,64 +77,98 @@ function escreveLetra(evento: React.MouseEvent<HTMLButtonElement>, posicao: IPos
             let letrasDigitadas = document.getElementById(`palavra${posicao.linha}`)?.children;
             let palavraDigitada = '';
             if(letrasDigitadas) for(let i = 0; i < letrasDigitadas.length; i++) {
-                palavraDigitada += letrasDigitadas[i].innerHTML;
+                palavraDigitada += (letrasDigitadas[i].firstElementChild as Element).innerHTML;
             }
 
             let indexPalavraDigitada = listaPalavrasSemAcento.indexOf(palavraDigitada);
             if(indexPalavraDigitada !== -1) {
                 
-                acentuaPalavraDigitada(posicao.linha, indexPalavraDigitada);
-                verificaPalavra(posicao.linha, palavraSecreta);
+                acentuaPalavraDigitada(posicao.linha, indexPalavraDigitada, setPalavras);
+                verificaPalavra(posicao.linha, palavraSecreta, setPalavras);
 
-                if(posicao.linha === 6) return
+                if(posicao.linha+1 === 6) {
+                    terminaJogo(false, palavraSecreta);
+                    return;
+                }
 
                 setPosicao({linha: posicao.linha+1, coluna: 0});
-                mostraCampoAtivo(posicao.linha+1, 0);
+                mostraCampoAtivo(posicao.linha+1, 0, setPalavras);
                 palavraDigitada = '';
                 
-            } else alertaErro('erro', 'Palavra não está na lista', posicao);
+            } else alertaErro('Palavra não está na lista', posicao);
         
-        } else alertaErro('erro', 'Preencha todas as letras', posicao);
+        } else alertaErro('Preencha todas as letras', posicao);
 
     } else {
 
         if(posicao.coluna > 0) setPosicao({...posicao, coluna: posicao.coluna-1}); 
-        campoLetra = document.getElementById(`campo-letra${posicao.linha}-${posicao.coluna-1}`);
-        if(campoLetra) campoLetra.innerHTML = '';
-        mostraCampoAtivo(posicao.linha, posicao.coluna-1);
+
+        setPalavras((estadoAnterior) => {
+            let novoEstado = Object.assign({}, estadoAnterior);
+
+            if(posicao.coluna > 0) {
+                novoEstado[`palavra${posicao.linha}`][`campoLetra${posicao.coluna-1}`].letra = '';
+            }
+
+            return novoEstado;
+        });
+
+        mostraCampoAtivo(posicao.linha, posicao.coluna-1, setPalavras);
 
     }
 }
 
 
-function mostraCampoAtivo(linha: number, coluna: number) {
-    const camposLetra = document.getElementById(`palavra${linha}`)?.children as HTMLCollectionOf<HTMLElement>;
-
-    for(let i = 0; i < 5; i++) {
-        let campo = camposLetra[i];
-        campo.classList.remove('ativo');
-
-        if(campo.innerHTML === '') campo.classList.remove('escrito'); 
-        else campo.classList.add('escrito');
-    }
+function mostraCampoAtivo(
+    linha: number, 
+    coluna: number,
+    setPalavras: React.Dispatch<React.SetStateAction<Record<string, Record<string, Record<string, string>>>>>) {
 
     if(coluna < 0) coluna = 0;
 
-    if(coluna < 5) camposLetra[coluna].classList.add('ativo');
+    setPalavras((estadoAnterior) => {
+        let novoEstado = Object.assign({}, estadoAnterior);
+
+        for(let i = 0; i < 5; i++) {
+            let campoLetra = novoEstado[`palavra${linha}`][`campoLetra${i}`];
+
+            if(campoLetra.letra !== '') campoLetra.classe = 'escrito';
+            else campoLetra.classe = '';
+        }
+
+        if(coluna < 5) novoEstado[`palavra${linha}`][`campoLetra${coluna}`].classe = 'ativo';
+
+        return novoEstado;
+    });
+
 }
 
 
-function acentuaPalavraDigitada(linha: number, indicePalavraDigitada: number) {
+function acentuaPalavraDigitada(
+    linha: number, 
+    indicePalavraDigitada: number,
+    setPalavras: React.Dispatch<React.SetStateAction<Record<string, Record<string, Record<string, string>>>>>) {
+
     const palavraAcentuada = listaPalavras[indicePalavraDigitada];
 
-    for(let i = 0; i < 5; i++) {
-        let campoLetra = document.getElementById(`campo-letra${linha}-${i}`);
-        if(campoLetra) campoLetra.innerHTML = palavraAcentuada[i];
-    }
+    setPalavras((estadoAnterior) => {
+        let novoEstado = Object.assign({}, estadoAnterior);
+
+        for(let i = 0; i < 5; i++) {
+            novoEstado[`palavra${linha}`][`campoLetra${i}`].letra = palavraAcentuada[i];
+        }
+
+        return novoEstado;
+    });
+
 }
 
 
-function verificaPalavra(linha: number, palavraSecreta: string) {
+async function verificaPalavra(
+    linha: number, 
+    palavraSecreta: string,
+    setPalavras: React.Dispatch<React.SetStateAction<Record<string, Record<string, Record<string, string>>>>>) {
+
     let letrasAcertadas = 0;
 
     const removeAcento = (str: string) => {
@@ -137,61 +191,81 @@ function verificaPalavra(linha: number, palavraSecreta: string) {
     }
 
     for(let i = 0; i < 5; i++) {
-        let campoLetra = document.getElementById(`campo-letra${linha}-${i}`);
+        document.getElementById(`campo-letra${linha}-${i}`)?.classList.add('verificado');
+        await new Promise((r) => setTimeout(r, 400));
 
-        if(campoLetra) {
-            let letra = campoLetra.innerHTML;
+
+        setPalavras((estadoAnterior) => {
+            let novoEstado = Object.assign({}, estadoAnterior);
+            let campoLetra = novoEstado[`palavra${linha}`][`campoLetra${i}`];
+            let letra = campoLetra.letra;
+            let letraIndex = removeAcento(palavraSecreta).indexOf(letra);
             let letraSecreta = palavraSecreta[i];
-            let tecla = document.getElementById(letra);
-            console.log(palavraSecreta)
-
+            let tecla = document.getElementById(letra) as HTMLButtonElement;
+    
             if(letra === removeAcento(letraSecreta)) {
-
-                campoLetra.classList.add('acertou');
-                campoLetra.innerHTML = letraSecreta;
-                if(tecla) tecla.classList.add('acertou');
-
+    
+                campoLetra.classe = 'verificado acertou';
+                campoLetra.letra = letraSecreta;
+                tecla.classList.add('acertou');
+    
                 palavraSecreta = palavraSecreta.replace(letraSecreta, ' ');
-
+    
                 letrasAcertadas++;
+    
+            } else if(letraIndex !== -1) {
 
-            } else if(removeAcento(palavraSecreta).indexOf(letra) !== -1) {
-
-                campoLetra.classList.add('tem-na-palavra');
-                if(tecla && !tecla.classList.contains('acertou')) tecla.classList.add('tem-na-palavra');
-
-                let letraIndex = removeAcento(palavraSecreta).indexOf(letra);
-
+                if(!campoLetra.classe.includes('acertou')) campoLetra.classe = 'verificado tem-na-palavra';
+                if(!tecla.classList.contains('acertou')) tecla.classList.add('tem-na-palavra');
+    
                 palavraSecreta = palavraSecreta.replace(palavraSecreta[letraIndex], ' ');
-
+    
             } else {
-
-                if(tecla && !tecla.classList.contains('tem-na-palavra') && !tecla.classList.contains('acertou')) {
-                    (tecla as HTMLButtonElement).disabled = true;
-                    tecla.classList.add('desabilitado');
+                if(!campoLetra.classe.includes('tem-na-palavra') && !campoLetra.classe.includes('acertou')) {
+                    campoLetra.classe = 'verificado desabilitado';
                 }
 
+                if(!tecla.classList.contains('tem-na-palavra') && !tecla.classList.contains('acertou')) {
+                    tecla.disabled = true;
+                    tecla.classList.add('desabilitado');
+                }
+    
             }
-        }
+    
+            return novoEstado;
+        });
     }
+
+    if(letrasAcertadas === 5) terminaJogo(true, palavraSecreta);
 }
 
 
-async function alertaErro(tipo: string, texto: string, posicao: IPosicao) {    
-    if(tipo === 'erro') {
-
-        toast.error(texto, {
-            autoClose: 800
-        });
-
-    } else if (tipo === 'sucesso') {
-        toast.success(texto, {
-            autoClose: false
-        });
-    }
+async function alertaErro(texto: string, posicao: IPosicao) {    
+    toast.error(texto, {
+        autoClose: 800
+    });
 
     const campoPalavra = document.getElementById(`palavra${posicao.linha}`);
     campoPalavra?.classList.add('alerta');
     await new Promise((r) => setTimeout(r, 400));
     campoPalavra?.classList.remove('alerta');
+}
+
+
+function terminaJogo(acertou: boolean, palavraSecreta: string) {
+    const teclas = document.getElementById('teclado')?.children as HTMLCollectionOf<HTMLButtonElement>;
+    for(let i = 0; i < teclas.length; i++) teclas[i].setAttribute('disabled', 'true');
+
+    if(acertou) {
+        toast.success('Parabéns, você acertou a palavra!', {
+            autoClose: false
+        });
+
+    } else {
+
+        toast.error(`Acabaram seu palpites, sinto muito. A palavra era ${palavraSecreta}`, {
+            autoClose: false
+        });
+
+    }
 }
