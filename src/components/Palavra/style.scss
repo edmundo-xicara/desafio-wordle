@@ -1,0 +1,29 @@
+.palavra {
+
+    &.alerta {
+        animation: alerta-palavra 0.1s 4;
+    }
+
+    .ativo {
+        border-bottom-width: 6px;
+    }
+
+    .escrito {
+        border-color: rgba(128, 128, 128, 1);
+        border-bottom-width: 2px !important;
+    }
+
+    #campo-letra0-0 {
+        border-bottom-width: 6px;
+    }
+}
+
+@keyframes alerta-palavra {
+    30% {padding-left: 10px;}
+    60% {padding-left: 0; padding-right: 10px;}
+    100% {padding-right: 0;}
+}
+
+@keyframes animacao-escrita {
+    50% {}
+}
