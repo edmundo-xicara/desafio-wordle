@@ -4,8 +4,9 @@ import Palavra from '../components/Palavra';
 import style from './App.module.scss';
 import Teclado from '../components/Teclado';
 import { useState } from 'react';
-import { toast, ToastContainer, Zoom } from 'react-toastify';
+import { ToastContainer, Zoom } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { IPalavras, IPalavra } from '../types/palavras';
 
 
 const palavraSecreta = sorteiaPalavra();
@@ -44,11 +45,11 @@ export default function App() {
 }
 
 
-function criaStatePalavra(): Record<string, Record<string, Record<string, string>>> {
-  let palavras: Record<string, Record<string, Record<string, string>>> = {};
+function criaStatePalavra(): IPalavras {
+  let palavras: IPalavras = {} as IPalavras;
   
   for(let i = 0; i < 6; i++) {
-    let palavra: Record<string, Record<string, string>> = {};
+    let palavra: IPalavra = {} as IPalavra;
 
     for(let j = 0; j < 5; j++) palavra[`campoLetra${j}`] = {'classe': '', 'letra': ''};
 
@@ -63,6 +64,5 @@ function criaStatePalavra(): Record<string, Record<string, Record<string, string
 
 function sorteiaPalavra() {
   const indiceSorteado =Math.floor(Math.random() * listaPalavras.length);
-  return 'NASAL'
   return listaPalavras[indiceSorteado];
 }

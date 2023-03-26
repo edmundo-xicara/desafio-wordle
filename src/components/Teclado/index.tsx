@@ -1,16 +1,20 @@
 import deleteImg from '../../assets/img/delete.png';
 import listaPalavras from '../../local-json/lista-palavras.json';
 import listaPalavrasSemAcento from '../../local-json/lista-palavras-sem-acento.json';
+import React, { useCallback } from 'react';
 import style from './Teclado.module.scss';
+import { IPalavras } from '../../types/palavras';
 import { IPosicao } from '../../types/posicao';
-import { useState } from 'react';
+import { ITeclado } from '../../types/teclado';
+import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 
 
 
 export default function Teclado({palavraSecreta, setPalavras}: {
     palavraSecreta: string, 
-    setPalavras: React.Dispatch<React.SetStateAction<Record<string, Record<string, Record<string, string>>>>>}) {
+    setPalavras: React.Dispatch<React.SetStateAction<IPalavras>>}
+) {
 
     const imgApagar = <img src={deleteImg} width='25px' alt='Apagar'></img>;
 
@@ -20,7 +24,37 @@ export default function Teclado({palavraSecreta, setPalavras}: {
         ['ENTER', 'Z', 'X', 'C', 'V', 'B', 'N', 'M', imgApagar]
     ];
 
+    const [teclado, setTeclado] = useState({
+        'habilitado': true, 
+        'teclasPermitidas': [
+            'Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P',
+            'A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', 
+            'ENTER', 'Z', 'X', 'C', 'V', 'B', 'N', 'M', 'BACKSPACE'
+        ]
+    })
+
     const [posicao, setPosicao] = useState({'linha': 0, 'coluna': 0});
+
+    const trataEventoTeclado = useCallback((evento: KeyboardEvent) => {
+        trataTecla(
+            evento.key.toUpperCase(), 
+            posicao, 
+            setPosicao, 
+            setPalavras,
+            teclado,
+            setTeclado,
+            palavraSecreta
+        )
+    }, [posicao, setPosicao, setPalavras, palavraSecreta, teclado, setTeclado]);
+
+    useEffect(() => {
+        document.addEventListener('keydown', trataEventoTeclado);
+    
+        return () => {
+          document.removeEventListener('keydown', trataEventoTeclado);
+        }
+    }, [trataEventoTeclado]);
+
 
     return (
         <section className={style.teclado} id='teclado'>
@@ -32,9 +66,20 @@ export default function Teclado({palavraSecreta, setPalavras}: {
                         <button 
                         className={style.tecla} 
                         key={`tecla${i}-${j}`} 
-                        onClick={evento => escreveLetra(evento, posicao, setPosicao, setPalavras, palavraSecreta)} 
-                        id={typeof tecla === 'string' ? tecla : 'DELETE'}> 
+                        id={typeof tecla === 'string' ? tecla : 'BACKSPACE'}
+                        onClick={() => {
+                            trataTecla(
+                                typeof tecla === 'string' ? tecla : 'BACKSPACE', 
+                                posicao, 
+                                setPosicao, 
+                                setPalavras,
+                                teclado,
+                                setTeclado, 
+                                palavraSecreta
+                                )}}>
+
                             {tecla} 
+
                         </button>
                     ))}
 
@@ -46,59 +91,75 @@ export default function Teclado({palavraSecreta, setPalavras}: {
 }
 
 
-function escreveLetra(
-    evento: React.MouseEvent<HTMLButtonElement>, 
+function trataTecla(
+    letra: string, 
     posicao: IPosicao, 
     setPosicao: React.Dispatch<React.SetStateAction<IPosicao>>, 
-    setPalavras: React.Dispatch<React.SetStateAction<Record<string, Record<string, Record<string, string>>>>>, 
-    palavraSecreta: string) {
- 
-    let letra = (evento.target as Element).innerHTML;
+    setPalavras: React.Dispatch<React.SetStateAction<IPalavras>>,
+    teclado: ITeclado,
+    setTeclado: React.Dispatch<React.SetStateAction<ITeclado>>, 
+    palavraSecreta: string
+) {
 
-    if(letra.length === 1) {
+    if(!teclado.teclasPermitidas.includes(letra) || !teclado.habilitado) return
 
-        setPalavras((estadoAnterior) => {
-            let novoEstado = Object.assign({}, estadoAnterior);
+    else if(letra.length === 1) {
+        escreveLetra(
+            letra,
+            posicao,
+            setPosicao,
+            setPalavras
+        )
+    }
 
-            if(posicao.coluna < 5) {
-                novoEstado[`palavra${posicao.linha}`][`campoLetra${posicao.coluna}`].letra = letra;
-            }
-            
-            return novoEstado;
-        });
+    else if(letra === 'ENTER') {
+        confirmaPalavra(
+            posicao,
+            setPosicao,
+            setPalavras,
+            setTeclado,
+            palavraSecreta
+        )
+    }
 
-        if(posicao.coluna < 5) setPosicao({...posicao, coluna: posicao.coluna+1});
-        mostraCampoAtivo(posicao.linha, posicao.coluna+1, setPalavras);
+    else {
+        deletaLetra(
+            posicao,
+            setPosicao,
+            setPalavras
+        )
+    }
 
-    } else if(letra === 'ENTER') {
+}
 
-        if(posicao.coluna === 5) {
 
-            let letrasDigitadas = document.getElementById(`palavra${posicao.linha}`)?.children;
-            let palavraDigitada = '';
-            if(letrasDigitadas) for(let i = 0; i < letrasDigitadas.length; i++) {
-                palavraDigitada += (letrasDigitadas[i].firstElementChild as Element).innerHTML;
-            }
+function escreveLetra(
+    letra: string, 
+    posicao: IPosicao, 
+    setPosicao: React.Dispatch<React.SetStateAction<IPosicao>>, 
+    setPalavras: React.Dispatch<React.SetStateAction<IPalavras>>
+) {
+    setPalavras((estadoAnterior) => {
+        let novoEstado = Object.assign({}, estadoAnterior);
 
-            let indexPalavraDigitada = listaPalavrasSemAcento.indexOf(palavraDigitada);
-            if(indexPalavraDigitada !== -1) {
-                
-                acentuaPalavraDigitada(posicao.linha, indexPalavraDigitada, setPalavras);
-                verificaPalavra(posicao.linha, palavraSecreta, setPalavras);
-
-                if(posicao.linha+1 === 5) return
-
-                setPosicao({linha: posicao.linha+1, coluna: 0});
-                mostraCampoAtivo(posicao.linha+1, 0, setPalavras);
-                palavraDigitada = '';
-                
-            } else alertaErro('Palavra não está na lista', posicao);
+        if(posicao.coluna < 5) {
+            novoEstado[`palavra${posicao.linha}`][`campoLetra${posicao.coluna}`].letra = letra;
+        }
         
-        } else alertaErro('Preencha todas as letras', posicao);
+        return novoEstado;
+    });
 
-    } else {
+    if(posicao.coluna < 5) setPosicao({...posicao, coluna: posicao.coluna+1});
+    mostraCampoAtivo(posicao.linha, posicao.coluna+1, setPalavras);
+}
 
-        if(posicao.coluna > 0) setPosicao({...posicao, coluna: posicao.coluna-1}); 
+
+function deletaLetra(
+    posicao: IPosicao, 
+    setPosicao: React.Dispatch<React.SetStateAction<IPosicao>>, 
+    setPalavras: React.Dispatch<React.SetStateAction<IPalavras>>
+) {
+    if(posicao.coluna > 0) setPosicao({...posicao, coluna: posicao.coluna-1}); 
 
         setPalavras((estadoAnterior) => {
             let novoEstado = Object.assign({}, estadoAnterior);
@@ -110,16 +171,47 @@ function escreveLetra(
             return novoEstado;
         });
 
-        mostraCampoAtivo(posicao.linha, posicao.coluna-1, setPalavras);
+    mostraCampoAtivo(posicao.linha, posicao.coluna-1, setPalavras);
+}
 
-    }
+
+function confirmaPalavra(
+    posicao: IPosicao, 
+    setPosicao: React.Dispatch<React.SetStateAction<IPosicao>>, 
+    setPalavras: React.Dispatch<React.SetStateAction<IPalavras>>,
+    setTeclado: React.Dispatch<React.SetStateAction<ITeclado>>, 
+    palavraSecreta: string
+) {
+    if(posicao.coluna === 5) {
+
+        let letrasDigitadas = document.getElementById(`palavra${posicao.linha}`)?.children;
+        let palavraDigitada = '';
+        if(letrasDigitadas) for(let i = 0; i < letrasDigitadas.length; i++) {
+            palavraDigitada += (letrasDigitadas[i].firstElementChild as Element).innerHTML;
+        }
+
+        let indexPalavraDigitada = listaPalavrasSemAcento.indexOf(palavraDigitada);
+        if(indexPalavraDigitada !== -1) {
+            
+            acentuaPalavraDigitada(posicao.linha, indexPalavraDigitada, setPalavras);
+            verificaPalavra(posicao.linha, palavraSecreta, setPalavras, setTeclado);
+
+            if(posicao.linha+1 === 5) return
+
+            setPosicao({linha: posicao.linha+1, coluna: 0});
+            mostraCampoAtivo(posicao.linha+1, 0, setPalavras);
+            palavraDigitada = '';
+            
+        } else alertaErro('Palavra não está na lista', posicao);
+    
+    } else alertaErro('Preencha todas as letras', posicao);
 }
 
 
 function mostraCampoAtivo(
     linha: number, 
     coluna: number,
-    setPalavras: React.Dispatch<React.SetStateAction<Record<string, Record<string, Record<string, string>>>>>) {
+    setPalavras: React.Dispatch<React.SetStateAction<IPalavras>>) {
 
     if(coluna < 0) coluna = 0;
 
@@ -144,7 +236,8 @@ function mostraCampoAtivo(
 function acentuaPalavraDigitada(
     linha: number, 
     indicePalavraDigitada: number,
-    setPalavras: React.Dispatch<React.SetStateAction<Record<string, Record<string, Record<string, string>>>>>) {
+    setPalavras: React.Dispatch<React.SetStateAction<IPalavras>>
+) {
 
     const palavraAcentuada = listaPalavras[indicePalavraDigitada];
 
@@ -164,7 +257,11 @@ function acentuaPalavraDigitada(
 async function verificaPalavra(
     linha: number, 
     palavraSecreta: string,
-    setPalavras: React.Dispatch<React.SetStateAction<Record<string, Record<string, Record<string, string>>>>>) {
+    setPalavras: React.Dispatch<React.SetStateAction<IPalavras>>,
+    setTeclado: React.Dispatch<React.SetStateAction<ITeclado>>
+) {
+
+    setTeclado((estadoAnterior) => ({...estadoAnterior, habilitado: false}))
 
     let letrasAcertadas = 0;
 
@@ -225,6 +322,12 @@ async function verificaPalavra(
                 if(!tecla.classList.contains('tem-na-palavra') && !tecla.classList.contains('acertou')) {
                     tecla.disabled = true;
                     tecla.classList.add('desabilitado');
+
+                    setTeclado((estadoAnterior) => {
+                        let novoEstado = Object.assign({}, estadoAnterior);
+                        delete novoEstado.teclasPermitidas[novoEstado.teclasPermitidas.indexOf(letra)];
+                        return novoEstado;
+                    })
                 }
     
             }
@@ -234,6 +337,8 @@ async function verificaPalavra(
     }
 
     await new Promise((r) => setTimeout(r, 400));
+
+    setTeclado((estadoAnterior) => ({...estadoAnterior, habilitado: true}))
 
     if(letrasAcertadas === 5) terminaJogo(true, palavraSecreta);
     else if(linha === 5) terminaJogo(false, palavraSecreta);
