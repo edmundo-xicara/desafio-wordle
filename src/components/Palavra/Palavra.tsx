@@ -1,9 +1,9 @@
-import React from 'react';
 import style from './Palavra.module.scss';
+import { IPalavra } from '../../types/palavras';
 import './style.scss';
 
 
-export default function Palavra({linha, palavra}: {linha: number, palavra: Record<string, Record<string, string>>}) {
+export default function Palavra({linha, palavra}: {linha: number, palavra: IPalavra}) {
     return (
         <article className={`${style.palavra} palavra`} id={'palavra'+linha}>
             

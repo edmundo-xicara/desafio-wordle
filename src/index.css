@@ -9,10 +9,6 @@
     --cor-da-fonte: white;
 }
 
-html {
-    font-size: 8px;
-}
-
 *, 
 *:after,
 *:before {
@@ -30,19 +26,23 @@ body{
 
 .desabilitado {
     background-color: #585858 !important;
+    color: white !important;
 }
 
 .tem-na-palavra {
     background-color: var(--cor-tem-na-palavra) !important;
+    color: white !important;
 }
 
 .acertou {
     background-color: var(--cor-acerto) !important;
+    color: white !important;
 }
 
 
-@media screen and (min-height: 600px) {
-    html {
-        font-size: 16px;
+@media (prefers-color-scheme: light) {
+    :root {
+        --cor-de-fundo: white;
+        --cor-da-fonte: #14161C;
     }
 }

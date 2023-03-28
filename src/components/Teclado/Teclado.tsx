@@ -1,8 +1,8 @@
 import deleteImg from '../../assets/img/delete.png';
-import listaPalavras from '../../local-json/lista-palavras.json';
-import listaPalavrasSemAcento from '../../local-json/lista-palavras-sem-acento.json';
-import React, { useCallback } from 'react';
+import listaPalavras from '../../banco-de-palavras/lista-palavras.json';
+import listaPalavrasSemAcento from '../../banco-de-palavras/lista-palavras-sem-acento.json';
 import style from './Teclado.module.scss';
+import React, { useCallback } from 'react';
 import { IPalavras } from '../../types/palavras';
 import { IPosicao } from '../../types/posicao';
 import { ITeclado } from '../../types/teclado';
@@ -292,15 +292,14 @@ async function verificaPalavra(
         setPalavras(estadoAnterior => {
             let novoEstado = Object.assign({}, estadoAnterior);
             let campoLetra = novoEstado[`palavra${linha}`][`campoLetra${i}`];
-            let letra = campoLetra.letra;
+            let letra = removeAcento(campoLetra.letra);
             let letraIndex = removeAcento(palavraSecreta).indexOf(letra);
             let letraSecreta = palavraSecreta[i];
-            let tecla = document.getElementById(letra) as HTMLButtonElement;
+            let tecla = document.getElementById(removeAcento(letra)) as HTMLButtonElement;
     
             if(letra === removeAcento(letraSecreta) && letraSecreta !== ' ') {
 
                 campoLetra.classe = 'verificado acertou';
-                campoLetra.letra = letraSecreta;
                 tecla.classList.add('acertou');
     
                 palavraSecreta = palavraSecreta.replace(letraSecreta, ' ');
@@ -320,14 +319,7 @@ async function verificaPalavra(
                 }
 
                 if(!tecla.classList.contains('tem-na-palavra') && !tecla.classList.contains('acertou')) {
-                    tecla.disabled = true;
                     tecla.classList.add('desabilitado');
-
-                    setTeclado((estadoAnterior) => {
-                        let novoEstado = Object.assign({}, estadoAnterior);
-                        delete novoEstado.teclasPermitidas[novoEstado.teclasPermitidas.indexOf(letra)];
-                        return novoEstado;
-                    })
                 }
     
             }
@@ -340,8 +332,8 @@ async function verificaPalavra(
 
     setTeclado((estadoAnterior) => ({...estadoAnterior, habilitado: true}))
 
-    if(letrasAcertadas === 5) terminaJogo(true, palavraSecreta);
-    else if(linha === 5) terminaJogo(false, palavraSecreta);
+    if(letrasAcertadas === 5) terminaJogo(true, palavraSecreta, setTeclado);
+    else if(linha === 5) terminaJogo(false, palavraSecreta, setTeclado);
 }
 
 
@@ -357,9 +349,12 @@ async function alertaErro(texto: string, posicao: IPosicao) {
 }
 
 
-function terminaJogo(acertou: boolean, palavraSecreta: string) {
-    const teclas = document.querySelectorAll('#teclado button') as NodeListOf<HTMLButtonElement>;
-    teclas.forEach(tecla => tecla.disabled = true); 
+function terminaJogo(
+    acertou: boolean,
+    palavraSecreta: string, 
+    setTeclado: React.Dispatch<React.SetStateAction<ITeclado>>
+) {
+    setTeclado((estadoAnterior) => ({...estadoAnterior, habilitado: false}))
 
     const palavras = document.querySelectorAll('.palavra');
     palavras.forEach(palavra => {

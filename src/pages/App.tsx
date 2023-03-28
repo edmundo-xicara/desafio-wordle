@@ -1,12 +1,12 @@
-import Cabecalho from '../components/Cabecalho';
-import listaPalavras from '../local-json/lista-palavras.json';
-import Palavra from '../components/Palavra';
+import Cabecalho from '../components/Cabecalho/Cabecalho';
+import listaPalavras from '../banco-de-palavras/lista-palavras.json';
+import Palavra from '../components/Palavra/Palavra';
 import style from './App.module.scss';
-import Teclado from '../components/Teclado';
-import { useState } from 'react';
-import { ToastContainer, Zoom } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import Teclado from '../components/Teclado/Teclado';
 import { IPalavras, IPalavra } from '../types/palavras';
+import { ToastContainer, Zoom } from 'react-toastify';
+import { useState } from 'react';
+import 'react-toastify/dist/ReactToastify.css';
 
 
 const palavraSecreta = sorteiaPalavra();
