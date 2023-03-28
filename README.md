@@ -1,5 +1,5 @@
 # Jogo Wordle em Português
-Este é um site que contém uma cópia simplificada do jogo Wordle, mas com palavras em português. Foi desenvolvido como uma oportunidade de aprendizado para trabalhar com React, Typescript, SCSS e CSS Modules. O jogo contém um banco de dados com aproximadamente 1500 palavras e foi criado em apenas 7 dias.
+Este é um site que contém uma cópia simplificada do jogo [Wordle](https://www.nytimes.com/games/wordle/index.html/), mas apenas com palavras em português, contando com um banco de aproximadamente 1500 palavras. Foi desenvolvido por mim em um desafio de código de 7 dias proposto pela [Lais Frigério](https://github.com/laisfrigerio) em conjunto com a [Alura](https://www.alura.com.br) e deixo meus sinceros agradecimentos às duas. Usei essa oportunidade para aprender a trabalhar com React, Typescript, SCSS e CSS Modules e como meu primeiro contato na prática com essas tecnologias foi ainda mais desafiador.
 
 <img src="https://github.com/edmundo-xicara/desafio-wordle/blob/main/src/assets/img/preview-jogo.png">
 
