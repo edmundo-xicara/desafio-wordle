@@ -6,7 +6,7 @@ export default function Cabecalho() {
         <header className={style.cabecalho}>
             <span className={style.logo}>W</span>
 
-            <button className={style['btn-tutorial']} onClick={() => abrirTutorial()}>
+            <button className={style['btn-tutorial']} id={'abrir-tutorial'} onClick={() => abrirTutorial()}>
                 ?
             </button>
         </header>

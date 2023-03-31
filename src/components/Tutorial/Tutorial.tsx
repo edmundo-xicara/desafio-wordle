@@ -3,8 +3,22 @@ import exemploTemNaPalavra from '../../assets/img/exemplo-tem-na-palavra.png';
 import exemplo from '../../assets/img/exemplo.png';
 import XIcone from '../../assets/img/x-icone.png';
 import style from './Tutorial.module.scss';
+import { useCallback, useEffect } from 'react';
 
 export default function Tutorial() {
+    const trataEvento = useCallback((evento: KeyboardEvent) => {
+        if(evento.key === 'Escape') fecharTutorial(evento)
+    }, []);
+
+    useEffect(() => {
+        document.addEventListener('keydown', trataEvento);
+    
+        return () => {
+          document.removeEventListener('keydown', trataEvento);
+        }
+    }, []);
+
+
     return (
         <section className={style['tutorial-container']} id='tutorial' onClick={(evento) => fecharTutorial(evento)}>
             <div className={style.tutorial}>
@@ -38,11 +52,13 @@ export default function Tutorial() {
 }
 
 
-export function fecharTutorial(evento: React.MouseEvent<HTMLElement, MouseEvent>) {
+export function fecharTutorial(evento: React.MouseEvent<HTMLElement, MouseEvent> | KeyboardEvent) {
     const tutorialContainer = document.getElementById('tutorial') as HTMLElement;
     const btnFechar = document.getElementById('fechar-tutorial') as HTMLButtonElement;
+    const btnAbrir = document.getElementById('abrir-tutorial');
+    const body = document.querySelector('body');
 
-    const camposPermitidos = [tutorialContainer, btnFechar, btnFechar.firstElementChild] as EventTarget[];
+    const camposPermitidos = [tutorialContainer, btnFechar, btnFechar.firstElementChild, btnAbrir, body];
 
-    if(camposPermitidos.includes(evento.target)) tutorialContainer.style.display = 'none';
+    if(camposPermitidos.includes(evento.target as HTMLElement)) tutorialContainer.style.display = 'none';
 }
