@@ -300,7 +300,7 @@ async function verificaPalavra(
 
 
         setPalavras(estadoAnterior => {
-            if(j != i) return estadoAnterior;
+            if(j !== i) return estadoAnterior;
             
             let novoEstado = Object.assign({}, estadoAnterior);
             let campoLetra = novoEstado[`palavra${linha}`][`campoLetra${i}`];
