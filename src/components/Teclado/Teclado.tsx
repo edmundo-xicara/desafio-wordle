@@ -91,7 +91,7 @@ export default function Teclado({palavraSecreta, setPalavras}: {
 }
 
 
-function trataTecla(
+export function trataTecla(
     letra: string, 
     posicao: IPosicao, 
     setPosicao: React.Dispatch<React.SetStateAction<IPosicao>>, 
@@ -175,7 +175,7 @@ function deletaLetra(
 }
 
 
-function confirmaPalavra(
+export function confirmaPalavra(
     posicao: IPosicao, 
     setPosicao: React.Dispatch<React.SetStateAction<IPosicao>>, 
     setPalavras: React.Dispatch<React.SetStateAction<IPalavras>>,
@@ -196,15 +196,21 @@ function confirmaPalavra(
             acentuaPalavraDigitada(posicao.linha, indexPalavraDigitada, setPalavras);
             verificaPalavra(posicao.linha, palavraSecreta, setPalavras, setTeclado);
 
-            if(posicao.linha+1 === 5) return
+            if(posicao.linha+1 === 6) return 3
 
             setPosicao({linha: posicao.linha+1, coluna: 0});
             mostraCampoAtivo(posicao.linha+1, 0, setPalavras);
             palavraDigitada = '';
             
-        } else alertaErro('Palavra não está na lista', posicao);
+        } else {
+            alertaErro('Palavra não está na lista', posicao);
+            return 1;
+        }
     
-    } else alertaErro('Preencha todas as letras', posicao);
+    } else {
+        alertaErro('Preencha todas as letras', posicao);
+        return 2;
+    }
 }
 
 
@@ -261,6 +267,8 @@ async function verificaPalavra(
     setTeclado: React.Dispatch<React.SetStateAction<ITeclado>>
 ) {
 
+    const resetPalavraSecreta = palavraSecreta;
+
     setTeclado((estadoAnterior) => ({...estadoAnterior, habilitado: false}))
 
     let letrasAcertadas = 0;
@@ -284,20 +292,24 @@ async function verificaPalavra(
         return str.split('').map(str => (mapaAcentos as any)[str] || str).join('');
     }
 
+    let j = 0
+
     for(let i = 0; i < 5; i++) {
         document.getElementById(`campo-letra${linha}-${i}`)?.classList.add('verificado');
         await new Promise((r) => setTimeout(r, 400));
 
 
         setPalavras(estadoAnterior => {
+            if(j != i) return estadoAnterior;
+            
             let novoEstado = Object.assign({}, estadoAnterior);
             let campoLetra = novoEstado[`palavra${linha}`][`campoLetra${i}`];
             let letra = removeAcento(campoLetra.letra);
             let letraIndex = removeAcento(palavraSecreta).indexOf(letra);
             let letraSecreta = palavraSecreta[i];
-            let tecla = document.getElementById(removeAcento(letra)) as HTMLButtonElement;
+            let tecla = document.getElementById(letra) as HTMLButtonElement;
     
-            if(letra === removeAcento(letraSecreta) && letraSecreta !== ' ') {
+            if(letra === removeAcento(letraSecreta)) {
 
                 campoLetra.classe = 'verificado acertou';
                 tecla.classList.add('acertou');
@@ -306,7 +318,10 @@ async function verificaPalavra(
     
                 letrasAcertadas++;
     
-            } else if(letraIndex !== -1 && letraSecreta !== ' ') {
+            } else if(
+                letraIndex !== -1 
+                && removeAcento(palavraSecreta[letraIndex]) !== novoEstado[`palavra${linha}`][`campoLetra${letraIndex}`].letra
+                ) {
 
                 if(!campoLetra.classe.includes('acertou')) campoLetra.classe = 'verificado tem-na-palavra';
                 if(!tecla.classList.contains('acertou')) tecla.classList.add('tem-na-palavra');
@@ -323,17 +338,18 @@ async function verificaPalavra(
                 }
     
             }
-    
+            
+            j++;
             return novoEstado;
         });
     }
 
     await new Promise((r) => setTimeout(r, 400));
 
-    setTeclado((estadoAnterior) => ({...estadoAnterior, habilitado: true}))
+    setTeclado((estadoAnterior) => ({...estadoAnterior, habilitado: true}));
 
-    if(letrasAcertadas === 5) terminaJogo(true, palavraSecreta, setTeclado);
-    else if(linha === 5) terminaJogo(false, palavraSecreta, setTeclado);
+    if(letrasAcertadas >= 5) terminaJogo(true, resetPalavraSecreta, setTeclado);
+    else if(linha === 5) terminaJogo(false, resetPalavraSecreta, setTeclado);
 }
 
 
@@ -374,4 +390,6 @@ function terminaJogo(
         });
 
     }
+
+    (document.getElementById('btn-jogar-novamente') as HTMLButtonElement).style.display = 'block';
 }

@@ -1,0 +1,50 @@
+.tutorial-container {
+    position: absolute;
+    width: 100vw;
+    height: 100vh;
+    z-index: 1;
+    background: rgba(20, 22, 28, .5);
+    font-family: var(--fonte-principal);
+    font-weight: 300;
+    color: white;
+
+    .tutorial {
+        background: rgba(20, 22, 28, 1);
+        max-width: 768px;
+        height: 100%;
+        overflow-y: scroll;
+        display: flex;
+        flex-flow: column;
+        padding: 20px 25px;
+        gap: 20px;
+        margin: auto;
+
+        .btn-fechar {
+            margin-left: 90%;
+            background-color: transparent;
+            border-width: 0;
+            width: fit-content;
+            transition: transform 0.5s;
+            cursor: pointer;
+    
+            img {
+                width: 20px;
+            }
+
+            &:hover {
+                transform: rotate(90deg);
+            }
+        }
+    
+        .resumo {
+            font-size: 24px;
+        }
+    
+        figure {
+            img {
+                width: 80vw;
+                max-width: 380px;
+            }
+        }
+    }
+}

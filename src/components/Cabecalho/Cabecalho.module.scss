@@ -1,6 +1,9 @@
 $tamanho-logo: 20px;
+$amarelo: #F9FF00;
 
 .cabecalho {
+    display: flex;
+    justify-content: space-between;
     position: relative;
     width: 100vw;
     padding: 1vh 5%;
@@ -10,8 +13,26 @@ $tamanho-logo: 20px;
         font-family: var(--fonte-principal);
         font-size: 24px;
         font-weight: 700;
-        background-color: #F9FF00;
+        background-color: $amarelo;
+        height: fit-content;
         padding: 0 3px;
+    }
+
+    .btn-tutorial {
+        font-family: var(--fonte-principal);
+        font-weight: 700;
+        font-size: 28px;
+        color: white;
+        width: 40px;
+        border-radius: 50%;
+        background-color: transparent;
+        border: 2px solid white;
+        cursor: pointer;
+
+        &:hover {
+            border-color: $amarelo;
+            color: $amarelo;
+        }
     }
 }
 
