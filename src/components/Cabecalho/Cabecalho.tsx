@@ -4,7 +4,7 @@ import style from './Cabecalho.module.scss';
 export default function Cabecalho() {
     return (
         <header className={style.cabecalho}>
-            <span className={style.logo}>W</span>
+            <a className={style.logo} href='https://www.nytimes.com/games/wordle/index.html' target='_blank'>W</a>
 
             <button className={style['btn-tutorial']} id={'abrir-tutorial'} onClick={() => abrirTutorial()}>
                 ?
