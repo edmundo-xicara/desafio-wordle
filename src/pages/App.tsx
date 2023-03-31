@@ -71,6 +71,5 @@ function criaStatePalavra(): IPalavras {
 
 function sorteiaPalavra() {
   const indiceSorteado =Math.floor(Math.random() * listaPalavras.length);
-  return 'TERMO'
   return listaPalavras[indiceSorteado];
 }
