@@ -1,10 +1,10 @@
 {
   "files": {
-    "main.css": "/react-gh-pages/static/css/main.d0bd231d.css",
-    "main.js": "/react-gh-pages/static/js/main.2246a402.js",
-    "index.html": "/react-gh-pages/index.html",
-    "main.d0bd231d.css.map": "/react-gh-pages/static/css/main.d0bd231d.css.map",
-    "main.2246a402.js.map": "/react-gh-pages/static/js/main.2246a402.js.map"
+    "main.css": "/desafio-wordle/static/css/main.d0bd231d.css",
+    "main.js": "/desafio-wordle/static/js/main.2246a402.js",
+    "index.html": "/desafio-wordle/index.html",
+    "main.d0bd231d.css.map": "/desafio-wordle/static/css/main.d0bd231d.css.map",
+    "main.2246a402.js.map": "/desafio-wordle/static/js/main.2246a402.js.map"
   },
   "entrypoints": [
     "static/css/main.d0bd231d.css",
