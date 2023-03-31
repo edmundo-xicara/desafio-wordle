@@ -1,46 +1,33 @@
-# Getting Started with Create React App
+# Jogo Wordle em Português
+Este é um site que contém uma cópia simplificada do jogo [Wordle](https://www.nytimes.com/games/wordle/index.html/), mas apenas com palavras em português, contando com um banco de aproximadamente 1500 palavras. Foi desenvolvido por mim em um desafio de código de 7 dias proposto pela [Lais Frigério](https://github.com/laisfrigerio) em conjunto com a [Alura](https://www.alura.com.br) e deixo meus sinceros agradecimentos às duas. Usei essa oportunidade para aprender a trabalhar com React, Typescript, SCSS e CSS Modules e como esse foi meu primeiro contato na prática com essas tecnologias, tudo ficou ainda mais desafiador.
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+<img src="https://github.com/edmundo-xicara/desafio-wordle/blob/main/src/assets/img/preview-jogo.png">
 
-## Available Scripts
+## Funcionamento do Jogo
+O jogo consiste em descobrir uma palavra de cinco letras em até seis tentativas. Cada letra digitada é verificada e, caso a letra esteja presente na palavra e na posição correta, ela é exibida em verde. Caso a letra esteja presente na palavra, porém na posição incorreta, ela é exibida em amarelo. O jogador pode usar essas informações para adivinhar a palavra secreta e ganhar o jogo.
 
-In the project directory, you can run:
+## Tecnologias Utilizadas
+<div>
+  <img src="https://img.shields.io/badge/html5-%23E34F26.svg?style=for-the-badge&logo=html5&logoColor=white" alt="HTML">
+  <img src="https://img.shields.io/badge/css3-%231572B6.svg?style=for-the-badge&logo=css3&logoColor=white" alt="CSS">
+  <img src="https://img.shields.io/badge/react-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB" alt="React">
+  <img src="https://img.shields.io/badge/typescript-%23007ACC.svg?style=for-the-badge&logo=typescript&logoColor=white" alt="TypeScript">
+</div>
 
-### `npm start`
+## Instalação e Execução
+Para executar o projeto localmente, é necessário ter instalado o Node.js e o gerenciador de pacotes npm. Depois, siga os seguintes passos:
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+### Clone o repositório em sua máquina:
+`git clone https://github.com/seu-usuario/nome-do-repositorio.git`
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+### Instale as dependências do projeto:
+`npm install`
 
-### `npm test`
+### Execute o projeto:
+`npm start`
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### Abra o navegador e acesse o endereço:
+`http://localhost:3000`
 
-### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+## Contribuição
+Sinta-se à vontade para contribuir com o projeto criando novas funcionalidades, corrigindo bugs ou melhorando o código. Basta abrir uma issue ou uma pull request no repositório.
