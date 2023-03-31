@@ -8,7 +8,7 @@
 | :sparkles: Nome        | **Wordle em Português**
 | :label: Tecnologias | <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/html5/html5-original.svg" width=30 /> <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/css3/css3-original.svg" width=30 /> <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg" width=30 /> <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/typescript/typescript-original.svg" width=30 /> <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg" width=30 />
 | :rocket: URL         | https://edmundo-xicara.github.io/desafio-wordle/
-| :fire: Desafio     | https://url-do-desafio.com.br
+| :fire: Desafio     | https://7daysofcode.io
 
 Este é um site que contém uma cópia simplificada do jogo [Wordle](https://www.nytimes.com/games/wordle/index.html/), mas apenas com palavras em português, contando com um banco de aproximadamente 5600 palavras. Foi desenvolvido por mim em um desafio de código de 7 dias proposto pela [Lais Frigério](https://github.com/laisfrigerio) em conjunto com a [Alura](https://www.alura.com.br) e deixo meus sinceros agradecimentos às duas. Usei essa oportunidade para aprender a trabalhar com React, Typescript, SCSS e CSS Modules e como esse foi meu primeiro contato na prática com essas tecnologias, tudo ficou ainda mais desafiador.
 
