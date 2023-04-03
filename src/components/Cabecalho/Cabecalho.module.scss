@@ -1,5 +1,7 @@
 $tamanho-logo: 20px;
 $amarelo: #F9FF00;
+$preto: #14161C;
+$cinza: #585858;
 
 .cabecalho {
     display: flex;
@@ -7,14 +9,15 @@ $amarelo: #F9FF00;
     position: relative;
     width: 100vw;
     padding: 1vh 5%;
-    border-bottom: 2px solid #585858;
+    border-bottom: 2px solid $cinza;
 
     .logo {
         font-family: var(--fonte-principal);
         font-size: 24px;
         font-weight: 700;
-        color: var(--cor-de-fundo);
+        color: $preto;
         background-color: $amarelo;
+        border: 2px solid $preto;
         height: fit-content;
         padding: 0 3px;
     }
@@ -41,5 +44,18 @@ $amarelo: #F9FF00;
 @media screen and (min-height: 600px) {
     .cabecalho .logo {
         font-size: 32px;
+    }
+}
+
+
+@media (prefers-color-scheme: light) {
+    .cabecalho .btn-tutorial {
+        border-color: $preto;
+        color: $preto;
+
+        &:hover {
+            border-color: $cinza;
+            color: $cinza;
+        }
     }
 }
